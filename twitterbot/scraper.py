@@ -14,7 +14,8 @@ problem_words = ["criminal", "felon", "ghetto", "addict", "deviant",
 "criminals", "convicts"]
 
 problem_digrams = [["violent", "criminal"], ["violent", "felon"], ["illegal", "alien"], ["illegal", "aliens"],
-["violent", "criminals"], ["violent", "felons"], ["mentally", "ill"], ["drug", "addict"], ["drug", "abuser"]]
+["violent", "criminals"], ["violent", "felons"], ["mentally", "ill"], ["drug", "addict"], ["drug", "abuser"],
+["illegal", "immigrants"], ["illegal", "immigrant"]]
 
 #Input: String of article text
 #Output: Article text with removed punctuation
@@ -30,8 +31,17 @@ def validate_crime(text):
     for word in text_no_punct.split():
         for word1 in crime_words:
             if word.lower() == word1:
-                print(word1)
                 return True
+    return False
+
+def check_noun(blob, word):
+    blob_parts = blob.tags
+    for pair in blob_parts:
+        if pair[0].lower() == word:
+            if pair[1] == 'NNS' or pair[1] == 'NN':
+                return True
+            else:
+                return False
     return False
 
 #Same as above method, but checks against problematic words
@@ -40,10 +50,14 @@ def check_problematic(text):
     blob = TextBlob(text)
     subjective = blob.sentiment.subjectivity
     polarity = blob.sentiment.polarity
-    if subjective > 0.35 or polarity < 0:
-        for word in blob.split().lower():
+    if subjective > 0.33 or polarity < 0:
+        for word in blob.words:
             for word1 in problem_words:
                 if word.lower() == word1:
+                    if word1 == 'criminal' or word1 == 'felon' or word1 == 'criminals':
+                        if check_noun(blob, word1):
+                            return True, word1
+                    else:    
                         return True, word1
         for digram in blob.ngrams(2):
             for digram1 in problem_digrams:
