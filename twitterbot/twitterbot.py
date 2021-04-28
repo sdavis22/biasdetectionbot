@@ -33,7 +33,8 @@ class Listener(tweepy.StreamListener):
                     update += "dated in the criminal justice community. "
                     update += "https://twitter.com/i/web/status/" + status.id_str
                     print(update)
-                api.update_status(update)
+                new_status = api.update_status(update)
+                api.retweet(new_status.id)
 
     def on_error(self, status_code):
         print(status_code)
