@@ -3,7 +3,7 @@ from time import sleep
 import tweepy
 import scraper
 
-#Fox News, FoxLA, CBSNews, CBSLA, ABCNews, NBCNews, AP
+#Fox News, FoxLA, CBSNews, CBSLA, ABC, NBCNews, AP
 follow_list = ['15012486', '1367531', '9648652', '28785486', '24928809', '14173315', '51241574']
 auth = tweepy.OAuthHandler(consumer_key, consumer_key_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -22,7 +22,7 @@ class Listener(tweepy.StreamListener):
                     update = "@" + status.user.screen_name
                     update += " this article used some coded language. "
                     update += "The word " + result[1] + " is widely considered to be "
-                    update += "dated/useless in the criminal justice community. "
+                    update += "dated in the criminal justice community. "
                     update += "https://twitter.com/i/web/status/" + status.id_str
                     print(update)
                 else:
